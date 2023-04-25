@@ -17,7 +17,7 @@ class delta_rule:
             self.w = w
         self.b = b
         self.a = a  # Learning rate
-        self.table = np.empty((0, 2 * input_size + 8))
+        self.table = np.empty((0, 3 * input_size + 6))
         self.tolerance = 0.2
         self.printing = printing
 
@@ -66,7 +66,7 @@ class delta_rule:
                 self.table = np.vstack(
                     (
                         self.table,
-                        np.full(2 * self.input_size + 8, epoch),
+                        np.full(3 * self.input_size + 6, epoch),
                     )
                 )
                 epoch += 1

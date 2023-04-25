@@ -31,14 +31,15 @@ class adaline:
 
 
 def test_adaline():
+    data = np.array([[1, 1], [1, -1], [-1, 1], [-1, -1]])
+
     model = adaline(
-        sample_size=2,
+        sample_size=data.shape[1],
         f=activation_func.identity,
         d_f=activation_func.d_identity,
         printing=True,
     )
 
-    data = np.array([[1, 1], [1, -1], [-1, 1], [-1, -1]])
     labels = np.array([1, -1, -1, -1])
 
     model.train(data, labels)
