@@ -8,8 +8,8 @@ class SOM:
         input_size,
         height,
         width,
-        r,
-        a,
+        r=0,
+        a=0.2,
         weight=None,
         eps=0.1,
         max_iter=10,
@@ -41,9 +41,10 @@ class SOM:
         if self.printing:
             print(f"\nweight(0) = {self.weight}")
         for i in range(self.max_iter):
-            self.table = np.vstack((self.table, [f'epo {i+1}'] * self.table.shape[1]))
+            self.table = np.vstack(
+                (self.table, [f"epo {i+1}"] * self.table.shape[1])
+            )
             for x in X:
-
                 if self.printing:
                     row = [
                         self.weight[j][k]
@@ -127,9 +128,9 @@ class SOM:
 
 
 def test_som_linear_winner_takes_all():
-    '''
+    """
     example of slide 27 of ch2.4
-    '''
+    """
     S = np.array([[1, 1], [-1, 1], [1, 0.5], [-0.5, 1]])
     init_weight = np.array([[[0.1, 0.3], [0.4, 0.5], [0.3, 0.4]]])
     som = SOM(
@@ -146,5 +147,15 @@ def test_som_linear_winner_takes_all():
 
     som.print_table()
 
-# test_som_linear_winner_takes_all()
 
+def example2():
+    S = np.array([[0, 0], [0, 1], [2, 2], [2, 0], [2, 1], [0, 2]])
+    L = np.array([1, 1, 1, 2, 2, 2])
+
+    model = SOM(input_size=S.shape[1], height=1, width=2, r=0, printing=True)
+    model.train(S)
+    model.print_table()
+
+
+example2()
+# test_som_linear_winner_takes_all()
