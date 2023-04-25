@@ -13,16 +13,16 @@ class hopfield:
         Get input data which is include p patterns.
         """
         p = input_data.shape[0]
-        for i in range(self.input_size):
-            for j in range(i + 1, self.input_size):
-                for k in range(p):
-                    self.w[i][j] += input_data[k][i] * input_data[k][j]
-                self.w[j][i] = self.w[i][j]
+        # for i in range(self.input_size):
+        #     for j in range(i + 1, self.input_size):
+        #         for k in range(p):
+        #             self.w[i][j] += input_data[k][i] * input_data[k][j]
+        #         self.w[j][i] = self.w[i][j]
 
         # wp = np.zeros((self.input_size, self.input_size))
-        # for i in range(p):
-        #     wp += np.outer(input_data[i], input_data[i])
-        # wp -= np.eye(self.input_size) * p
+        for i in range(p):
+            self.w += np.outer(input_data[i], input_data[i])
+        self.w -= np.eye(self.input_size) * p
         if self.printing:
             self.print_weight()
 
@@ -52,7 +52,8 @@ class hopfield:
 
         for i in range(max_iter):
             if self.printing:
-                print(f"\ny({i}) = {Y})")
+                print(f"\n\ny({i}) = {Y})")
+                print(f'energy = {self.energy(Y)}')
             pre_Y = Y.copy()
             rand_index = np.random.permutation(self.input_size)
             if self.printing:
@@ -60,8 +61,9 @@ class hopfield:
             for j in rand_index:
                 Y[j] = np.sign(X[j] + self.w.T[j] @ Y)
                 if self.printing:
-                    print(f"select {j}th neuron")
+                    print(f"\nselect {j}th neuron")
                     print(f"y({i}) = {Y}")
+                    print(f'energy = {self.energy(Y)}')
             if np.all(pre_Y == Y):
                 print(f"Converged at {i+1}th iteration\n")
                 break
@@ -107,8 +109,24 @@ def test_slide_19():
     sample = np.array([-1, -1, -1, -1])
     print(f"Input: {sample}")
     print(f"Output: {model.recall_synchrouns(sample)}")
-    print(f"Output: {model.recall_asynchrouns(sample)}")
+    print(f"Output: {model.recall_asynchrouns(sample)}")  # Got in loop :(
+    
+
+def example3():
+    s1 = [1, -1, -1, 1]
+    s2 = [-1, -1, 1, 1]
+    s3 = [-1, -1, -1, -1]
+
+    S = np.array([s1, s2, s3])
+
+    model = hopfield(input_size=len(S[0]), printing=True)
+    model.train(S)
+
+    sample1 = [-1, 0, 0, 1]
+    model.recall_asynchrouns(sample1)
+    # model.recall_synchrouns(sample1) # Got in loop :(
 
 
+example3()
 # test_hopfield()
 # test_slide_19()
