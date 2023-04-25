@@ -69,7 +69,7 @@ class HAM:
         Get a sample and return the output
         """
         if self.printing:
-            print(f"Input: {X}")
+            print(f"\nInput: {X}")
             print(f"Weight matrix:\n {self.w}")
             print(f"y_in: {self.w.T @ X}")
         y_in = self.w.T @ X
@@ -101,7 +101,7 @@ def test_HAM_with_delta():
     heb = hebb_rule(4)
     model = HAM(4, 2, heb, activation_func.sign, True)
 
-    model.train(S, T, True)
+    model.train(S, T)
     model.print_table()
 
     sample1 = np.array([1, -1, 0, 1])
@@ -111,4 +111,26 @@ def test_HAM_with_delta():
     print(model.recall(sample2))
 
 
+def example2():
+    S = np.array([[-1, -1, 1, 1], [-1, 1, -1, 1], [-1, 1, 1, -1]])
+    T = np.array([[1, 1, -1], [1, -1, -1], [-1, 1, -1]])
+
+    heb = hebb_rule(4)
+    model = HAM(
+        input_size=S.shape[1],
+        output_size=T.shape[1],
+        rule=heb,
+        f=activation_func.sign,
+        printing=True,
+    )
+
+    model.train(S, T)
+    model.print_table()
+
+    print(model.recall(S[0]))
+    print(model.recall(S[1]))
+    print(model.recall(S[2]))
+
+
 # test_HAM_with_hebb()
+# example2()

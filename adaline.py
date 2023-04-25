@@ -19,7 +19,7 @@ class adaline:
 
     def train(self, S, t):
         self.model = delta_rule(
-            input_size=2,
+            input_size=self.sample_size,
             f=activation_func.identity,
             d_f=activation_func.d_identity,
             printing=self.printing,
