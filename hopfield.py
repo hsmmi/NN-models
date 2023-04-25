@@ -111,4 +111,4 @@ def test_slide_19():
 
 
 # test_hopfield()
-test_slide_19()
+# test_slide_19()
