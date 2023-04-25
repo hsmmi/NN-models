@@ -95,4 +95,20 @@ def test_hopfield():
     print(f"Output: {model.recall_asynchrouns(sample)}")
 
 
+def test_slide_19():
+    """
+    The output of synchrouns and asynchrouns method is different.
+    """
+    S = np.array([[1, 1, -1, -1]])
+
+    model = hopfield(input_size=len(S[0]), printing=True)
+    model.train(S)
+
+    sample = np.array([-1, -1, -1, -1])
+    print(f"Input: {sample}")
+    print(f"Output: {model.recall_synchrouns(sample)}")
+    print(f"Output: {model.recall_asynchrouns(sample)}")
+
+
 # test_hopfield()
+test_slide_19()
