@@ -18,24 +18,31 @@ class adaline:
         self.printing = printing
 
     def train(self, S, t):
-        model = delta_rule(
+        self.model = delta_rule(
             input_size=2,
             f=activation_func.identity,
             d_f=activation_func.d_identity,
             printing=self.printing,
         )
-        model.train(S, t)
+        self.model.train(S, t)
+
+    def print_table(self):
+        self.model.print_table()
 
 
-model = adaline(
-    sample_size=2,
-    f=activation_func.identity,
-    d_f=activation_func.d_identity,
-    printing=True,
-)
+def test_adaline():
+    model = adaline(
+        sample_size=2,
+        f=activation_func.identity,
+        d_f=activation_func.d_identity,
+        printing=True,
+    )
 
-data = np.array([[1, 1], [1, -1], [-1, 1], [-1, -1]])
-labels = np.array([1, -1, -1, -1])
+    data = np.array([[1, 1], [1, -1], [-1, 1], [-1, -1]])
+    labels = np.array([1, -1, -1, -1])
 
-model.train(data, labels)
-model.print_table()
+    model.train(data, labels)
+    model.print_table()
+
+
+# test_adaline()
