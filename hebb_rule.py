@@ -8,12 +8,13 @@ class hebb_rule:
         self.w = np.zeros(input_size)
         self.b = 0
         self.a = 1  # Learning rate
-        self.table = np.empty((0, 2 * input_size + 6))
+        self.table = np.empty((0, 3 * input_size + 4))
         self.printing = printing
 
     def reset_weights(self):
         self.w = np.zeros(self.input_size)
         self.b = 0
+        self.table = np.empty((0, 3 * self.input_size + 4))
 
     def train_sample(self, X: np.ndarray, t: int):
         """
@@ -25,6 +26,11 @@ class hebb_rule:
 
         delta_w = self.a * X * t
         delta_b = self.a * t
+
+        # eta = 0.4
+        # self.a = 0.1
+        # delta_w = eta * X * t - self.a * self.w * t
+        # delta_b = eta * t - self.a * self.b * t
 
         self.w += delta_w
         self.b += delta_b
@@ -69,4 +75,20 @@ def test_hebb_rule():
     model.train(data, labels)
     model.print_table()
 
+
+def example2():
+    data = np.array(([1, 0.5, 1], [1, 1, 0.5], [0.5, 1, 1]))
+    label1 = np.array([1, 1, 0.5])
+    label2 = np.array([1, -0.5, 1])
+
+    model = hebb_rule(data.shape[1], printing=True)
+    model.train(data, label1)
+    model.print_table()
+
+    model.reset_weights()
+    model.train(data, label2)
+    model.print_table()
+
+
+example2()
 # test_hebb_rule()

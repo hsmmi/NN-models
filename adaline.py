@@ -46,4 +46,19 @@ def test_adaline():
     model.print_table()
 
 
+def example2():
+    data = np.array([[0, 0, 0], [0, 1, 1], [1, 0, 1], [1, 1, 0], [1, 1, 1]])
+    labels = np.array([0, 0, 0, 1, 1])
+
+    model = adaline(
+        sample_size=data.shape[1],
+        f=activation_func.identity,
+        d_f=activation_func.d_identity,
+        printing=True,
+    )
+
+    model.train(data, labels)
+    model.print_table()
+
+example2()
 # test_adaline()
