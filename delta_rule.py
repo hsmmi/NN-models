@@ -109,5 +109,25 @@ def test_delta_rule():
     model.train(data, labels)
     model.print_table()
 
+def midterm_p7():
+    # NAND logical function
+    data = np.array([[1, 1], [1, -1], [-1, 1], [-1, -1]])
+    labels = np.array([-1, 1, 1, 1])
+
+    init_w = np.array([1.0, 1.0])
+    model = delta_rule(
+        input_size=data.shape[1],
+        f=activation_func.bipolar_sigmoid,
+        d_f=activation_func.d_bipolar_sigmoid,
+        w=init_w,
+        b=1.0,
+        a=0.5,
+        printing=True,
+    )
+
+    model.train(data, labels)
+    model.print_table()
+
+midterm_p7()
 
 # test_delta_rule()
