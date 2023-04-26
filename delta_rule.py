@@ -128,6 +128,6 @@ def midterm_p7():
     model.train(data, labels)
     model.print_table()
 
-midterm_p7()
+# midterm_p7()
 
 # test_delta_rule()

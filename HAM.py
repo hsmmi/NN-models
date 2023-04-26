@@ -132,5 +132,60 @@ def example2():
     print(model.recall(S[2]))
 
 
+def midterm_p8():
+    s1 = np.array([-1, 1, -1])
+    s2 = np.array([1, -1, -1])
+    s3 = np.array([1, 1, 1])
+    t1 = np.array([-1, 1])
+    t2 = np.array([1, -1])
+    t3 = np.array([1, 1])
+
+    S = np.array([s1, s2, s3])
+    T = np.array([t1, t2, t3])
+
+    heb = hebb_rule(S.shape[1])
+    model = HAM(
+        input_size=S.shape[1],
+        output_size=T.shape[1],
+        rule=heb,
+        f=activation_func.sign,
+        printing=True,
+    )
+
+    model.train(S, T)
+    model.print_table()
+
+    print(model.recall(s1))
+    print(model.recall(s2))
+    print(model.recall(s3))
+
+    # Part b
+
+    new_s = np.array([-1, -1, 1])
+    new_t = np.array([-1, -1])
+
+    S = np.array([s1, s2, s3, new_s])
+    T = np.array([t1, t2, t3, new_t])
+
+    heb = hebb_rule(S.shape[1])
+    model = HAM(
+        input_size=S.shape[1],
+        output_size=T.shape[1],
+        rule=heb,
+        f=activation_func.sign,
+        printing=True,
+    )
+
+    model.train(S, T)
+    model.print_table()
+
+    print(model.recall(s1))
+    print(model.recall(s2))
+    print(model.recall(s3))
+    print(model.recall(new_s))
+    
+midterm_p8()
+
+
 # test_HAM_with_hebb()
 # example2()
