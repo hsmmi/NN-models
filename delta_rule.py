@@ -109,6 +109,7 @@ def test_delta_rule():
     model.train(data, labels)
     model.print_table()
 
+
 def midterm_p7():
     # NAND logical function
     data = np.array([[1, 1], [1, -1], [-1, 1], [-1, -1]])
@@ -127,6 +128,7 @@ def midterm_p7():
 
     model.train(data, labels)
     model.print_table()
+
 
 # midterm_p7()
 

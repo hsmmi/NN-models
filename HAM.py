@@ -183,8 +183,9 @@ def midterm_p8():
     print(model.recall(s2))
     print(model.recall(s3))
     print(model.recall(new_s))
-    
-midterm_p8()
+
+
+# midterm_p8()
 
 
 # test_HAM_with_hebb()
