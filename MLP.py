@@ -1,5 +1,5 @@
 import numpy as np
-from Activation_func import activation_func
+from activation_func import activation_func
 from Initial_weights import Init_Weights
 
 
