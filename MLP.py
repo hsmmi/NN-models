@@ -36,7 +36,6 @@ class MLP:
             self.W1, self.W2 = init_weights
 
         self.delta_W1 = np.zeros_like(self.W1)
-        print(self.delta_W1.shape)
         self.delta_W2 = np.zeros_like(self.W2)
         self.act_func_h = activation_func_hidden
         self.act_func_o = activation_func_output
@@ -117,7 +116,6 @@ class MLP:
                     self.delta_w = (
                         self.z.T.dot(self.output_delta) * learning_rate * -1
                     )
-                    print(self.delta_v.shape)
                     self.W1 += self.delta_v
                     self.W2 += self.delta_w
                     table_1.append([inp, np.round(self.z_in, self.dp), np.round(self.z, self.dp), np.round(self.y_in, self.dp),
