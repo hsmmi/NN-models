@@ -1,6 +1,7 @@
 import numpy as np
 from activation_func import activation_func
 from Initial_weights import Init_Weights
+from tabulate import tabulate
 
 
 class MLP:
@@ -15,32 +16,28 @@ class MLP:
         derivative_act_output,
         bias=True,
         batch_mode=True,
+        print_steps=True,
+        decimal_point=2,
+        init_weights=None
     ):
         self.input_size = input_size
         self.hidden_size = hidden_size
         self.output_size = output_size
         self.bias = bias
         self.batch = batch_mode
-        init_weights = Init_Weights(
-            self.input_size, self.hidden_size, self.output_size, bias=self.bias
-        )
-        self.W1, self.W2 = init_weights.fill_equal(v_h=0.5, v_o=0.5)
-        """
-        self.W1 = np.array([
-            [0.22, 0.57],
-            [0.7, 0.21],
-            [0.18, 0.11],
-            [0.38, 0.44]
-        ])
+        self.dp = decimal_point
+        self.print_steps = print_steps
+        if(init_weights == None):
+            init_weights = Init_Weights(
+                self.input_size, self.hidden_size, self.output_size, bias=self.bias
+            )
+            self.W1, self.W2 = init_weights.fill_equal(v_h=0.5, v_o=0.5)
+        else:
+            self.W1, self.W2 = init_weights
 
-        self.W2 = np.array([
-            [0.09, 0.81],
-            [0.77, 0.86],
-            [0.17, 0.29]
-        ])
-        """
-        self.delta_W1 = np.zeros(self.W1.shape)
-        self.delta_W2 = np.zeros(self.W2.shape)
+        self.delta_W1 = np.zeros_like(self.W1)
+        print(self.delta_W1.shape)
+        self.delta_W2 = np.zeros_like(self.W2)
         self.act_func_h = activation_func_hidden
         self.act_func_o = activation_func_output
         self.de_act_h = derivative_act_hidden
@@ -68,32 +65,71 @@ class MLP:
         self.sigma_output_delta = self.output_delta.dot(self.W2[1:, :].T)
         self.hidden_delta = self.sigma_output_delta * self.de_act_h(self.z_in)
         if self.batch:
-            self.h += X.T.dot(self.hidden_delta)
-            self.o += self.z.T.dot(self.output_delta)
+            self.h_q = X.T.dot(self.hidden_delta)
+            self.h += self.h_q
+            self.o_q = self.z.T.dot(self.output_delta)
+            self.o += self.o_q
 
     def train(self, X, y, epochs, learning_rate):
         if self.batch:
-            if self.print_table:
-                print()
             for epoch in range(epochs):
+                print(f'epoch {epoch+1}')
+                table_1 = []
+                table_2 = []
                 for i in range(X.shape[0]):
                     inp = X[i].reshape([1, -1])
                     output = self.forward(inp)
                     self.backward(inp, y[i], output)
-                self.W1 += (self.h / X.shape[0]) * learning_rate * -1
-                self.W2 += (self.o / X.shape[0]) * learning_rate * -1
+                    table_1.append([inp, np.round(self.z_in, self.dp), np.round(self.z, self.dp),
+                                    np.round(self.y_in, self.dp), np.round(self.y_in, self.dp)])
+                    table_2.append([np.round(self.hidden_delta, self.dp), np.round(self.output_delta, self.dp),
+                                    np.round(self.h_q, self.dp), np.round(self.o_q, self.dp)])
+
+                self.delta_v = (self.h / X.shape[0]) * learning_rate * -1
+                self.delta_w = (self.o / X.shape[0]) * learning_rate * -1
+                self.W1 += self.delta_v
+                self.W2 += self.delta_w
+
+                if(self.print_steps):
+                    print(tabulate(table_1, headers=[
+                        "x", "z_in", "z", "y_in", "y"]))
+                    print(tabulate(table_2, headers=[
+                        "δ_H", "δ_O", "h(q)", "o(q)"]))
+
+                    print(f"o = {np.round(self.o, self.dp)}")
+                    print(f"h = {np.round(self.h, self.dp)}")
+                    print(f"Δv = {np.round(self.delta_v, self.dp)}")
+                    print(f"Δw = {np.round(self.delta_w, self.dp)}")
+                    print(f"v = {np.round(self.W1, self.dp)}")
+                    print(f"w = {np.round(self.W2, self.dp)}")
         else:
             for epoch in range(epochs):
+                print(f'epoch {epoch+1}')
+                table_1 = []
+                table_2 = []
                 for i in range(X.shape[0]):
                     inp = X[i].reshape([1, -1])
                     output = self.forward(inp)
                     self.backward(inp, y[i], output)
-                    self.W1 += (
+                    self.delta_v = (
                         inp.T.dot(self.hidden_delta) * learning_rate * -1
                     )
-                    self.W2 += (
+                    self.delta_w = (
                         self.z.T.dot(self.output_delta) * learning_rate * -1
                     )
+                    print(self.delta_v.shape)
+                    self.W1 += self.delta_v
+                    self.W2 += self.delta_w
+                    table_1.append([inp, np.round(self.z_in, self.dp), np.round(self.z, self.dp), np.round(self.y_in, self.dp),
+                                   np.round(self.y_in, self.dp)])
+                    table_2.append([np.round(self.hidden_delta, self.dp), np.round(self.output_delta, self.dp), np.round(
+                        self.delta_v, self.dp), np.round(self.delta_w, self.dp), np.round(self.W1, self.dp), np.round(self.W2, self.dp)])
+
+                if(self.print_steps):
+                    print(tabulate(table_1, headers=[
+                        "x", "z_in", "z", "y_in", "y"]))
+                    print(tabulate(table_2, headers=[
+                        "δ_H", "δ_O", "Δv", "Δw", "v", "w"]))
         return self.W1, self.W2
 
 
@@ -119,15 +155,9 @@ def example():
         derivative_act_output=de_output_act,
         batch_mode=True,
         bias=False,
+        print_steps=True
     )
-    updated_weights = mlp.train(X, y, epochs=1, learning_rate=1.0)
-
-    # Print the updated weights
-    W1, W2 = updated_weights
-    print("Updated Weights (W1):")
-    print(W1)
-    print("\nUpdated Weights (W2):")
-    print(W2)
+    mlp.train(X, y, epochs=1, learning_rate=1.0)
 
 
 example()
