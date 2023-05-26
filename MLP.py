@@ -73,8 +73,6 @@ class MLP:
 
     def train(self, X, y, epochs, learning_rate):
         if self.batch:
-            if self.print_table:
-                print()
             for epoch in range(epochs):
                 for i in range(X.shape[0]):
                     inp = X[i].reshape([1, -1])
