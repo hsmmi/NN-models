@@ -52,6 +52,8 @@ class MLP:
         """
         X: input sample
         """
+        if self.bias:
+            X = np.c_[np.ones(X.shape[0]), X]
         self.z_in = np.dot(X, self.W1)
         self.z = self.act_func_h(self.z_in)
         if self.bias:
@@ -63,17 +65,19 @@ class MLP:
     def backward(self, X, y, output):
         self.output_error = y - output
         self.output_delta = -1 * self.output_error * self.de_act_o(self.y_in)
-        self.z2_error = self.output_delta.dot(self.W2[1:, :].T)
-        self.hidden_delta = self.z2_error * self.de_act_h(self.z_in)
+        self.sigma_output_delta = self.output_delta.dot(self.W2[1:, :].T)
+        self.hidden_delta = self.sigma_output_delta * self.de_act_h(self.z_in)
         if self.batch:
             self.h += X.T.dot(self.hidden_delta)
             self.o += self.z.T.dot(self.output_delta)
 
     def train(self, X, y, epochs, learning_rate):
         if self.batch:
+            if self.print_table:
+                print()
             for epoch in range(epochs):
                 for i in range(X.shape[0]):
-                    inp = X[i, :].reshape([1, X[i, :].shape[0]])
+                    inp = X[i].reshape([1, -1])
                     output = self.forward(inp)
                     self.backward(inp, y[i], output)
                 self.W1 += (self.h / X.shape[0]) * learning_rate * -1
@@ -81,7 +85,7 @@ class MLP:
         else:
             for epoch in range(epochs):
                 for i in range(X.shape[0]):
-                    inp = X[i, :].reshape([1, X[i, :].shape[0]])
+                    inp = X[i].reshape([1, -1])
                     output = self.forward(inp)
                     self.backward(inp, y[i], output)
                     self.W1 += (
@@ -93,38 +97,37 @@ class MLP:
         return self.W1, self.W2
 
 
-# Example usage
-input_size = 3
-hidden_size = 2
-output_size = 1
-bias = False
-# X = np.array([[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]])
-X = np.array([[0.25, 0.5, 0.75], [0.75, 0.5, 0.25]])
-y = np.array([[0.25], [0.75]])
-if bias:
-    X = np.c_[np.ones(X.shape[0]), X]
+def example():
+    # Example usage
+    X = np.array([[0.25, 0.5, 0.75], [0.75, 0.5, 0.25]])
+    y = np.array([[0.25], [0.75]])
+    input_size = X.shape[1]
+    hidden_size = 2
+    output_size = y.shape[1]
+
+    hidden_act = activation_func.bipolar_sigmoid
+    de_hidden_act = activation_func.d_bipolar_sigmoid
+    output_act = activation_func.bipolar_sigmoid
+    de_output_act = activation_func.d_bipolar_sigmoid
+    mlp = MLP(
+        input_size,
+        hidden_size,
+        output_size,
+        activation_func_hidden=hidden_act,
+        activation_func_output=output_act,
+        derivative_act_hidden=de_hidden_act,
+        derivative_act_output=de_output_act,
+        batch_mode=True,
+        bias=False,
+    )
+    updated_weights = mlp.train(X, y, epochs=1, learning_rate=1.0)
+
+    # Print the updated weights
+    W1, W2 = updated_weights
+    print("Updated Weights (W1):")
+    print(W1)
+    print("\nUpdated Weights (W2):")
+    print(W2)
 
 
-hidden_act = activation_func.bipolar_sigmoid
-de_hidden_act = activation_func.d_bipolar_sigmoid
-output_act = activation_func.bipolar_sigmoid
-de_output_act = activation_func.d_bipolar_sigmoid
-mlp = MLP(
-    input_size,
-    hidden_size,
-    output_size,
-    activation_func_hidden=hidden_act,
-    activation_func_output=output_act,
-    derivative_act_hidden=de_hidden_act,
-    derivative_act_output=de_output_act,
-    batch_mode=True,
-    bias=False,
-)
-updated_weights = mlp.train(X, y, epochs=1, learning_rate=1.0)
-
-# Print the updated weights
-W1, W2 = updated_weights
-print("Updated Weights (W1):")
-print(W1)
-print("\nUpdated Weights (W2):")
-print(W2)
+example()
