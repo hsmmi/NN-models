@@ -18,7 +18,7 @@ class MLP:
         batch_mode=True,
         print_steps=True,
         decimal_point=2,
-        init_weights=None
+        init_weights=None,
     ):
         self.input_size = input_size
         self.hidden_size = hidden_size
@@ -27,9 +27,12 @@ class MLP:
         self.batch = batch_mode
         self.dp = decimal_point
         self.print_steps = print_steps
-        if(init_weights == None):
+        if init_weights == None:
             init_weights = Init_Weights(
-                self.input_size, self.hidden_size, self.output_size, bias=self.bias
+                self.input_size,
+                self.hidden_size,
+                self.output_size,
+                bias=self.bias,
             )
             self.W1, self.W2 = init_weights.fill_equal(v_h=0.5, v_o=0.5)
         else:
@@ -72,28 +75,47 @@ class MLP:
     def train(self, X, y, epochs, learning_rate):
         if self.batch:
             for epoch in range(epochs):
-                print(f'epoch {epoch+1}')
+                print(f"epoch {epoch+1}")
                 table_1 = []
                 table_2 = []
                 for i in range(X.shape[0]):
                     inp = X[i].reshape([1, -1])
                     output = self.forward(inp)
                     self.backward(inp, y[i], output)
-                    table_1.append([inp, np.round(self.z_in, self.dp), np.round(self.z, self.dp),
-                                    np.round(self.y_in, self.dp), np.round(self.y_in, self.dp)])
-                    table_2.append([np.round(self.hidden_delta, self.dp), np.round(self.output_delta, self.dp),
-                                    np.round(self.h_q, self.dp), np.round(self.o_q, self.dp)])
+                    table_1.append(
+                        [
+                            inp,
+                            np.round(self.z_in, self.dp),
+                            np.round(self.z, self.dp),
+                            np.round(self.y_in, self.dp),
+                            np.round(self.y_in, self.dp),
+                        ]
+                    )
+                    table_2.append(
+                        [
+                            np.round(self.hidden_delta, self.dp),
+                            np.round(self.output_delta, self.dp),
+                            np.round(self.h_q, self.dp),
+                            np.round(self.o_q, self.dp),
+                        ]
+                    )
 
                 self.delta_v = (self.h / X.shape[0]) * learning_rate * -1
                 self.delta_w = (self.o / X.shape[0]) * learning_rate * -1
                 self.W1 += self.delta_v
                 self.W2 += self.delta_w
 
-                if(self.print_steps):
-                    print(tabulate(table_1, headers=[
-                        "x", "z_in", "z", "y_in", "y"]))
-                    print(tabulate(table_2, headers=[
-                        "δ_H", "δ_O", "h(q)", "o(q)"]))
+                if self.print_steps:
+                    print(
+                        tabulate(
+                            table_1, headers=["x", "z_in", "z", "y_in", "y"]
+                        )
+                    )
+                    print(
+                        tabulate(
+                            table_2, headers=["δ_H", "δ_O", "h(q)", "o(q)"]
+                        )
+                    )
 
                     print(f"o = {np.round(self.o, self.dp)}")
                     print(f"h = {np.round(self.h, self.dp)}")
@@ -103,7 +125,7 @@ class MLP:
                     print(f"w = {np.round(self.W2, self.dp)}")
         else:
             for epoch in range(epochs):
-                print(f'epoch {epoch+1}')
+                print(f"epoch {epoch+1}")
                 table_1 = []
                 table_2 = []
                 for i in range(X.shape[0]):
@@ -118,16 +140,38 @@ class MLP:
                     )
                     self.W1 += self.delta_v
                     self.W2 += self.delta_w
-                    table_1.append([inp, np.round(self.z_in, self.dp), np.round(self.z, self.dp), np.round(self.y_in, self.dp),
-                                   np.round(self.y_in, self.dp)])
-                    table_2.append([np.round(self.hidden_delta, self.dp), np.round(self.output_delta, self.dp), np.round(
-                        self.delta_v, self.dp), np.round(self.delta_w, self.dp), np.round(self.W1, self.dp), np.round(self.W2, self.dp)])
+                    table_1.append(
+                        [
+                            inp,
+                            np.round(self.z_in, self.dp),
+                            np.round(self.z, self.dp),
+                            np.round(self.y_in, self.dp),
+                            np.round(self.y_in, self.dp),
+                        ]
+                    )
+                    table_2.append(
+                        [
+                            np.round(self.hidden_delta, self.dp),
+                            np.round(self.output_delta, self.dp),
+                            np.round(self.delta_v, self.dp),
+                            np.round(self.delta_w, self.dp),
+                            np.round(self.W1, self.dp),
+                            np.round(self.W2, self.dp),
+                        ]
+                    )
 
-                if(self.print_steps):
-                    print(tabulate(table_1, headers=[
-                        "x", "z_in", "z", "y_in", "y"]))
-                    print(tabulate(table_2, headers=[
-                        "δ_H", "δ_O", "Δv", "Δw", "v", "w"]))
+                if self.print_steps:
+                    print(
+                        tabulate(
+                            table_1, headers=["x", "z_in", "z", "y_in", "y"]
+                        )
+                    )
+                    print(
+                        tabulate(
+                            table_2,
+                            headers=["δ_H", "δ_O", "Δv", "Δw", "v", "w"],
+                        )
+                    )
         return self.W1, self.W2
 
 
@@ -153,7 +197,7 @@ def example():
         derivative_act_output=de_output_act,
         batch_mode=True,
         bias=False,
-        print_steps=True
+        print_steps=True,
     )
     mlp.train(X, y, epochs=1, learning_rate=1.0)
 

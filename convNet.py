@@ -13,7 +13,7 @@ class convNet:
         stride_pooling: int,
         act_f: activation_func,
         pooling_params: list = None,
-        decimal_point : int = 2
+        decimal_point: int = 2,
     ):
         """
         Convolutional Neural Network
@@ -33,7 +33,10 @@ class convNet:
         for j in range(
             0, len(x) - len(self.conv_filter) + 1, self.stride_conv
         ):
-            z_in_j = np.round(np.dot(x[j : j + len(self.conv_filter)], self.conv_filter), self.dp)
+            z_in_j = np.round(
+                np.dot(x[j : j + len(self.conv_filter)], self.conv_filter),
+                self.dp,
+            )
             print(f"Z_in({j+1}) = {z_in_j}")
             conv_output.append(z_in_j)
         return np.array(conv_output)
@@ -44,9 +47,15 @@ class convNet:
         out_H = np.round(self.act_f(out_conv), self.dp)
         print("After applying hidden layer activation function:")
         print(f"Z = {out_H}")
-        out_O = np.round(self.pooling_type(
-            out_H, self.pooling_size, self.stride_pooling, self.pooling_params
-        ), self.dp)
+        out_O = np.round(
+            self.pooling_type(
+                out_H,
+                self.pooling_size,
+                self.stride_pooling,
+                self.pooling_params,
+            ),
+            self.dp,
+        )
         print("Output after pooling:")
         print(f"y = {out_O}")
         return out_H, out_O

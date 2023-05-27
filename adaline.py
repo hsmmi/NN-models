@@ -60,5 +60,6 @@ def example2():
     model.train(data, labels)
     model.print_table()
 
+
 example2()
 # test_adaline()
