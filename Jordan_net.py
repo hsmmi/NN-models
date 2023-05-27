@@ -1,5 +1,6 @@
 import numpy as np
 from activation_func import activation_func
+from tabulate import tabulate
 
 
 class ElmanNet:
@@ -12,6 +13,19 @@ class ElmanNet:
         h = self.f_hidden(h_in)
         y_in = np.dot(h, W_HO)
         y = self.f_output(y_in)
+        print(
+            tabulate(
+                [
+                    ["x", np.round(x, 3)],
+                    ["y_0", np.round(y_0, 3)],
+                    ["h_in", np.round(h_in, 3)],
+                    ["h", np.round(h, 3)],
+                    ["y_in", np.round(y_in, 3)],
+                    ["y", np.round(y, 3)],
+                ],
+                tablefmt="fancy_grid",
+            )
+        )
         return h, y
 
 
