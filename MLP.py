@@ -108,12 +108,16 @@ class MLP:
                 if self.print_steps:
                     print(
                         tabulate(
-                            table_1, headers=["x", "z_in", "z", "y_in", "y"]
+                            table_1,
+                            headers=["x", "z_in", "z", "y_in", "y"],
+                            tablefmt="fancy_grid",
                         )
                     )
                     print(
                         tabulate(
-                            table_2, headers=["δ_H", "δ_O", "h(q)", "o(q)"]
+                            table_2,
+                            headers=["δ_H", "δ_O", "h(q)", "o(q)"],
+                            tablefmt="fancy_grid",
                         )
                     )
 
@@ -163,13 +167,16 @@ class MLP:
                 if self.print_steps:
                     print(
                         tabulate(
-                            table_1, headers=["x", "z_in", "z", "y_in", "y"]
+                            table_1,
+                            headers=["x", "z_in", "z", "y_in", "y"],
+                            tablefmt="fancy_grid",
                         )
                     )
                     print(
                         tabulate(
                             table_2,
                             headers=["δ_H", "δ_O", "Δv", "Δw", "v", "w"],
+                            tablefmt="fancy_grid",
                         )
                     )
         return self.W1, self.W2
