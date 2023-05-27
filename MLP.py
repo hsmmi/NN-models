@@ -27,7 +27,7 @@ class MLP:
         self.batch = batch_mode
         self.dp = decimal_point
         self.print_steps = print_steps
-        if init_weights == None:
+        if init_weights is None:
             init_weights = Init_Weights(
                 self.input_size,
                 self.hidden_size,
@@ -51,8 +51,6 @@ class MLP:
         """
         X: input sample
         """
-        if self.bias:
-            X = np.c_[np.ones(X.shape[0]), X]
         self.z_in = np.dot(X, self.W1)
         self.z = self.act_func_h(self.z_in)
         if self.bias:
@@ -73,6 +71,8 @@ class MLP:
             self.o += self.o_q
 
     def train(self, X, y, epochs, learning_rate):
+        if self.bias:
+            X = np.c_[np.ones(X.shape[0]), X]
         if self.batch:
             for epoch in range(epochs):
                 print(f"epoch {epoch+1}")
@@ -202,4 +202,4 @@ def example():
     mlp.train(X, y, epochs=1, learning_rate=1.0)
 
 
-example()
+# example()
