@@ -171,7 +171,7 @@ class MLP:
                             np.round(self.z_in, self.dp),
                             np.round(self.z, self.dp),
                             np.round(self.y_in, self.dp),
-                            np.round(self.y_in, self.dp),
+                            np.round(output, self.dp),
                         ]
                     )
                     table_2.append(
