@@ -28,12 +28,16 @@ W_OI = np.array([[0, 0.4, -0.2, 0.3], [0.3, -0.1, 0.2, 0.1]])
 
 Elman = ElmanNet(f_hidden=f_h, f_output=f_o)
 h, y = Elman.feed(x=x, y_0=y, W_IH=W_IH, W_OI=W_OI, W_HO=W_HO)
-print(f"h = {np.round(h,2)}\ny = {np.round(y,2)}")
+print(f"h = {np.round(h,3)}\ny = {np.round(y,3)}")
 
 Elman = ElmanNet(f_hidden=f_h, f_output=f_o)
 h, y = Elman.feed(x=x, y_0=y, W_IH=W_IH, W_OI=W_OI, W_HO=W_HO)
-print(f"h = {np.round(h,2)}\ny = {np.round(y,2)}")
+print(f"h = {np.round(h,3)}\ny = {np.round(y,3)}")
 
 Elman = ElmanNet(f_hidden=f_h, f_output=f_o)
 h, y = Elman.feed(x=x, y_0=y, W_IH=W_IH, W_OI=W_OI, W_HO=W_HO)
-print(f"h = {np.round(h,2)}\ny = {np.round(y,2)}")
+print(f"h = {np.round(h,3)}\ny = {np.round(y,3)}")
+
+Elman = ElmanNet(f_hidden=f_h, f_output=f_o)
+h, y = Elman.feed(x=x, y_0=y, W_IH=W_IH, W_OI=W_OI, W_HO=W_HO)
+print(f"h = {np.round(h,3)}\ny = {np.round(y,3)}")
